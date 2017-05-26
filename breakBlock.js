@@ -4,7 +4,7 @@ var BLOCK_WIDTH = BOX_WIDTH/10;
 var BLOCK_HEIGHT = BLOCK_WIDTH/2;
 var BLOCK_COLUMN = 10;
 var BALL_R = 10;
-const color = ["#33B5E5","#0099CC","#AA66CC"];
+const color = ["#663300","#CCCCCC","#FFCC00"];
 var ballNum = 50;
 var game;
 
@@ -71,14 +71,22 @@ function ballUpdate(ctx){
 	}
 	if(ball[1]>=BOX_HEIGHT+BALL_R){
 		window.clearInterval(game);
-		alert("游戏结束");
+		alert("游戏结束 最终得分："+score);
 	}
 }
 function initBlocks(){
 	for(i=0;i<5;i++){
 		var row = [];
 		for(j=0;j<10;j++){
-			row[j] = parseInt(3*Math.random());
+			var ran = 5*Math.random();
+			if(ran<=3.5){
+				row[j] = 0;
+			}else if(ran<=4.5){
+				row[j] = 1;
+			}else{
+				row[j] = 2;
+			}
+			// row[j] = parseInt(3*Math.random());
 		}
 		blocks[i] = row;
 	}
@@ -105,6 +113,8 @@ function blockUpdate(){
 				if((ball[0]>xRangL&&ball[0]<xRangR)&&(ball[1]>yRangT&&ball[1]<yRangB)){
 					var xLength = Math.abs(ball[0]-xRangL)<Math.abs(xRangR-ball[0])?Math.abs(ball[0]-xRangL):Math.abs(xRangR-ball[0]);
 					var yLength = Math.abs(ball[1]-yRangT)<Math.abs(yRangB-ball[1])?Math.abs(ball[1]-yRangT):Math.abs(yRangB-ball[1]);
+					scro(blocks[i][j]);
+					console.log(score);
 					blocks[i][j] = -1;
 					ballNum--;
 					if(ballNum==0){
@@ -112,7 +122,7 @@ function blockUpdate(){
 						alert("游戏通关");
 					}
 					if(xLength/Math.abs(ball[2])<yLength/Math.abs(ball[3])){
-						console.log("水平方向")
+						// console.log("水平方向")
 						if(ball[2]>0){
 							ball[0] -= xLength;
 						}else{
@@ -120,7 +130,7 @@ function blockUpdate(){
 						}
 						ball[2] = -ball[2];
 					}else{
-						console.log("竖直方向")
+						// console.log("竖直方向")
 						if(ball[3]>0){
 							ball[1] -= yLength;
 						}else{
@@ -134,6 +144,16 @@ function blockUpdate(){
 	}
 }
 
+//计分函数，灰色1分，银色3分，金色5分
+function scro(c){
+	if(c==0){
+		score++;
+	}else if(c==1){
+		score += 3;
+	}else{
+		score +=5;
+	}
+}
 //绘制砖块
 function buildBloks(ctx){
 	for(i=0;i<5;i++){
